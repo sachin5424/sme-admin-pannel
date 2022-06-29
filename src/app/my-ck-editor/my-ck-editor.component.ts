@@ -90,6 +90,11 @@ export class MyCkEditorComponent implements OnInit, ControlValueAccessor {
           value: null
         },
         {
+          name: 'resizeImage:10',
+          label: '10%',
+          value: '10'
+        },
+        {
           name: 'resizeImage:50',
           label: '25%',
           value: '25'

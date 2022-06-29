@@ -1,0 +1,4 @@
+externals: [
+    'moment/moment',
+     'moment'
+ ]

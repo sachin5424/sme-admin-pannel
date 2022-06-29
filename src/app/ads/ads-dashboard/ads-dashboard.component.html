@@ -1,0 +1,18 @@
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 mt-2">
+            <div class="card text-left">
+              <div class="card-body">
+                <h1>Ads</h1>
+                <button mat-raised-button (click)="openDialog()" >Add Ads</button>
+              </div>
+            </div>
+          
+         </div>
+        <div class="col-md-12">
+          <app-ads-table [data1]="data"></app-ads-table>
+         </div>
+    </div>
+</div>

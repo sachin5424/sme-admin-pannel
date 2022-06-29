@@ -1,0 +1,103 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+          <ng-container matColumnDef="multidelete">
+            <th mat-header-cell *matHeaderCellDef> 
+            <button  [disabled]="multiDelete.length==0" (click)="MultideleletCategory()" color="primary" mat-mini-fab  (click)="onClick">
+                <mat-icon  class="mat-18">delete</mat-icon>
+            </button>  
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+               <mat-checkbox  (click)="toggle(element._id,$event)">
+            </mat-checkbox> 
+              </td>
+          </ng-container>
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Link </th>
+      <td mat-cell *matCellDef="let element"> {{element.link}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> type </th>
+      <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="profile">
+        <th mat-header-cell *matHeaderCellDef> image </th>
+        <td mat-cell *matCellDef="let element"> 
+          <img  style="  width: 40px;
+          height: 40px;
+          font-size: 40px;" [src]="element.image"/>
+        </td>
+      </ng-container>
+    <!-- Symbol Column -->
+   <!-- openIn -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status ==true?'Action':'DeAction'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="openin">
+      <th mat-header-cell *matHeaderCellDef> openIn </th>
+      <td mat-cell *matCellDef="let element"> {{element.openIn}} </td>
+    </ng-container>
+
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="edit" >
+        
+        <th mat-header-cell *matHeaderCellDef> edit </th>
+        <td mat-cell *matCellDef="let element" >
+          <div class="example-button-container">
+            <mat-icon (click)="openDialog(element)" style="cursor: pointer" color="warn">edit</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+       <!-- Symbol Column -->
+       <ng-container matColumnDef="delete" >
+        <th mat-header-cell *matHeaderCellDef> delelet </th>
+        <td mat-cell *matCellDef="let element" >
+          <div class="example-button-container">
+            <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner[element._id]" ></mat-spinner>
+            <mat-icon (click)="deleletCategory(element._id)" *ngIf="!spinner[element._id]"  style="cursor: pointer" color="warn">delete</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+     
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+
+     
+  <mat-paginator  #paginators  [pageSizeOptions]="[1,5, 10, 20]"
+  showFirstLastButtons 
+  aria-label="Select page of periodic elements">
+</mat-paginator> 
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>dialpad</mat-icon>
+      <span>Redial</span>
+    </button>
+    <button mat-menu-item disabled>
+      <mat-icon>voicemail</mat-icon>
+      <span>Check voice mail</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>notifications_off</mat-icon>
+      <span>Disable alerts</span>
+    </button>
+  </mat-menu>
+  

@@ -1,0 +1,75 @@
+<form [formGroup]="Form"  #formDirective="ngForm"  (ngSubmit)="submit(formDirective)">
+    <div class="container-fluid">
+
+        <div class="row">
+        
+            <div class="col-md-12">
+            <h1 class="text-center">{{ data.status }} Category </h1>
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>name</mat-label>
+                <input matInput type="text" formControlName="name">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['name'].valid && 
+                 Form.controls['name']?.touched"> 
+                 This field is required    (Minimum 2 characters required)
+                 {{ errorObj['name'] }}
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 
+                 {{ errorObj['name'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>email</mat-label>
+                <input matInput type="email" formControlName="email">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['email'].valid && 
+                 Form.controls['email']?.touched"> 
+                 This field is required    ( enter a valid email address)
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 {{ errorObj['email'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <mat-form-field class="example-form-field w-100" appearance="outline">
+                    <mat-label>subject</mat-label>
+                    <input matInput type="text" formControlName="subject">
+                    <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['subject'].valid && 
+                     Form.controls['subject']?.touched"> 
+                     This field is required    (Minimum 2 characters required)
+                    </mat-hint>
+                    <mat-hint class="text-red" style="color:red" > 
+                     {{ errorObj['subject'] }}
+                    </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <mat-form-field class="example-form-field w-100" appearance="outline">
+                        <mat-label>message</mat-label>
+                        <textarea matInput type="textarea" formControlName="message">
+                            </textarea>
+                        <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['message'].valid && 
+                         Form.controls['message']?.touched"> 
+                         This field is required    (Minimum 2 characters required)
+                        </mat-hint>
+                        <mat-hint class="text-red" style="color:red" > 
+                         {{ errorObj['message'] }}
+                        </mat-hint>
+                        </mat-form-field>
+                    </div>
+            <div class="col-md-12 mt-2">
+            <mat-checkbox formControlName="status">Status</mat-checkbox>       
+            </div>
+           
+            <div class="col-md-12 mt-2">
+             <button type="submit" mat-raised-button color="spinner==true?null:primary'"   >
+             <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner" ></mat-spinner>
+              {{ spinner == false? 'Save':null }}
+            </button>    
+            </div>
+          
+        </div>
+    </div>
+</form>

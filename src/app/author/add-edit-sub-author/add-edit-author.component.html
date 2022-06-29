@@ -1,0 +1,60 @@
+<form [formGroup]="Form"  #formDirective="ngForm"  (ngSubmit)="submit(formDirective)">
+    <div class="container-fluid">
+
+        <div class="row">
+        
+            <div class="col-md-12">
+            <h1 class="text-center">{{ data.status | uppercase }} Author </h1>
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['name'].valid && 
+                 Form.controls['name']?.touched"> 
+                 This field is required    (Minimum 2 characters required)
+                 {{ errorObj['name'] }}
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 
+                 {{ errorObj['name'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" formControlName="email">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['email'].valid && 
+                 Form.controls['email']?.touched"> 
+                 This field is required    (Please enter a valid email address)
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 {{ errorObj['email'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 mb-3">
+                <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+                <input hidden (change)="onFileSelected($event)" #fileInput type="file">
+                <!-- <span class="file-name">{{selectedFile?.name}}</span> -->
+               
+            </div>
+            <div class="col-md-6 ">
+                <mat-hint class="text-red" style="color:red" > 
+                    {{ errorObj['image'] }}
+                   </mat-hint>
+               <img with="100%" height="90px" [src]="base64Image"/>
+            </div>
+            <div class="col-md-12 mt-2">
+            <mat-checkbox formControlName="status">Status</mat-checkbox>       
+            </div>
+           
+            <div class="col-md-12 mt-2">
+             <button type="submit" mat-raised-button color="spinner==true?null:primary'"   >
+             <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner" ></mat-spinner>
+              {{ spinner == false? 'Save':null }}
+            </button>    
+            </div>
+          
+        </div>
+    </div>
+</form>

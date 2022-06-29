@@ -1,0 +1,136 @@
+<form [formGroup]="Form"  #formDirective="ngForm"  (ngSubmit)="submit(formDirective)">
+    <div class="container-fluid">
+
+        <div class="row">
+           <div class="col-12">
+            <h1 class="text-center">{{ data.status }} Category </h1>
+           </div>
+      
+            <div class="col-md-12">
+                <mat-radio-group  formControlName="favoriteSeason"  aria-label="Select an option">
+                    <mat-radio-button value="1">Type </mat-radio-button>
+                    <mat-radio-button value="2">Category </mat-radio-button>
+                 </mat-radio-group>
+            </div>
+            <div class="col-md-4" *ngIf="Form.get('favoriteSeason').value == 1? true:false">
+           
+                <mat-form-field class="w-100" appearance="fill">
+                    <mat-label>Select Type</mat-label>
+                    <mat-select   formControlName="type" >
+                      <mat-option *ngFor="let item of types" value="item">{{ item }}</mat-option>
+                    </mat-select>
+                    <mat-hint  *ngIf="!Form.controls['type'].valid && 
+                    Form.controls['type']?.touched" align="end"> This field is required</mat-hint>
+                    <mat-hint  align="end" class="text-red" style="color:red" > 
+                        {{ errorObj['type'] }}
+                       </mat-hint>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-4" >
+           
+                <mat-form-field class="w-100" appearance="fill">
+                    <mat-label>Select auther</mat-label>
+                    <mat-select   formControlName="authorId" >
+                      <mat-option *ngFor="let item of autherList" [value]="item._id">{{ item.name }}</mat-option>
+                    </mat-select>
+                    <mat-hint  *ngIf="!Form.controls['authorId'].valid && 
+                    Form.controls['authorId']?.touched" align="end"> This field is required</mat-hint>
+                    <mat-hint  align="end" class="text-red" style="color:red" > 
+                        {{ errorObj['authorId'] }}
+                       </mat-hint>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-4" *ngIf="Form.get('favoriteSeason').value == 2? true:false">
+           
+                <mat-form-field class="w-100" appearance="fill">
+                    <mat-label>Select Category</mat-label>
+                    <mat-select   formControlName="categoryId" >
+                      <mat-option *ngFor="let item of categoryList" [value]="item._id">{{ item.title }}</mat-option>
+                    </mat-select>
+                    <mat-hint  *ngIf="!Form.controls['categoryId'].valid && 
+                    Form.controls['categoryId']?.touched" align="end"> This field is required</mat-hint>
+                    <mat-hint  align="end" class="text-red" style="color:red" > 
+                        {{ errorObj['categoryId'] }}
+                       </mat-hint>
+                  </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+          
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>Title</mat-label>
+                <input matInput type="text" formControlName="title">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['title'].valid && 
+                 Form.controls['title']?.touched"> 
+                 This field is required    (Minimum 2 characters required)
+                 {{ errorObj['title'] }}
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 
+                 {{ errorObj['title'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+            <mat-form-field class="example-form-field w-100" appearance="outline">
+                <mat-label>Slug</mat-label>
+                <input matInput type="text" formControlName="slug">
+                <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['slug'].valid && 
+                 Form.controls['slug']?.touched"> 
+                 This field is required    (Minimum 2 characters required)
+                </mat-hint>
+                <mat-hint class="text-red" style="color:red" > 
+                 {{ errorObj['slug'] }}
+                </mat-hint>
+                </mat-form-field>
+            </div>
+          
+          
+            <div class="col-md-8">
+                <mat-form-field class="w-100" appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  formControlName="date"  [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                   
+                    <mat-hint class="text-red" style="color:red" *ngIf="!Form.controls['date'].valid && 
+                    Form.controls['date']?.touched"> 
+                    This field is required 
+                   </mat-hint>
+                   <mat-hint class="text-red" style="color:red" > 
+                    {{ errorObj['date'] }}
+                   </mat-hint>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-12 mt-4">
+                <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+                <input hidden (change)="onFileSelected($event)" #fileInput type="file">
+                <!-- <span class="file-name">{{selectedFile?.name}}</span> -->
+                <mat-hint class="text-red" style="color:red" > 
+                    {{ errorObj['image'] }}
+                   </mat-hint>
+            </div>
+            <div class="col-md-12 mt-4">
+                <mat-checkbox formControlName="status">Status</mat-checkbox>       
+                </div>
+            <!-- <div class="col-md-12 mt-2">
+             <button type="submit" mat-raised-button color="spinner==true?null:primary'"   >
+             <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner" ></mat-spinner>
+              {{ spinner == false? 'Save':null }}
+            </button>    
+            </div> -->
+          
+        </div>
+    </div>
+</form>
+<div class="col-md-12 mt-4">
+    <app-my-ck-editor [(ngModel)]="htmlData"></app-my-ck-editor>
+</div>
+
+<div class="col-md-12 mt-2">
+    <button (click)="submit(formDirective)" type="submit" mat-raised-button color="spinner==true?null:primary'"   >
+    <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner" ></mat-spinner>
+     {{ spinner == false? 'Save':null }}
+   </button>    
+   </div>
