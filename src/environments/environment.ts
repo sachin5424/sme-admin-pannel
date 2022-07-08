@@ -3,12 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 
-const baseUrl = "http://3.109.249.64:3000/admin/"
+const baseUrl = "http://192.168.1.26:3000/admin/"
 export const environment = {
-  api_url:"http://3.109.249.64:3000/",
+  api_url:"http://192.168.1.26:3000/",
   production: false,
   category_all_list:baseUrl+"category/list/ALL",
-
   category_save:baseUrl+"category/save",
   category_delete:baseUrl+"category/delete",
   author_all_list:baseUrl+"author/list/ALL",
@@ -33,7 +32,9 @@ export const environment = {
   magazineDelete:baseUrl+"magazine/delete",
   magazineMany:baseUrl+"magazine/delete-many",
   videoDeleteOne:baseUrl+"video/delete",
-  videoDeleteMany:baseUrl+"video/delete-many"
+  videoDeleteMany:baseUrl+"video/delete-many",
+  news_list:baseUrl+"news/list/ALL",
+  news_delete:baseUrl+"news/delete",
 };
 
 /*

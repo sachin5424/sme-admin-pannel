@@ -21,7 +21,7 @@ export class CommentTableComponent implements OnInit {
 
   spinner = {}
   @Input() data1:any;  
-  displayedColumns: any = ['multidelete','position','profile', 'name', 'weight', 'symbol','edit','delete'];
+  displayedColumns: any = ['multidelete','position','profile', 'name', 'weight', 'symbol','delete'];
   dataSource!:MatTableDataSource<any>
    
   @ViewChild('paginators') paginator!: MatPaginator;

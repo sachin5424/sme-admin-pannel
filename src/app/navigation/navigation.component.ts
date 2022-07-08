@@ -51,7 +51,7 @@ export class NavigationComponent {
     }).then((result) => {  
       /* Read more about isConfirmed, isDenied below */  
         if (result.isConfirmed) {  
-          window.localStorage.clear()  
+          window.sessionStorage.clear()  
           this.logout.emit(true);
           window.location.reload();
           Swal.fire('logout!', '', 'success')  

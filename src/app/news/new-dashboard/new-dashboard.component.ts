@@ -30,7 +30,7 @@ export class NewDashboardComponent implements OnInit {
     this.get_category_list()
   }
   get_category_list(){
-    this._http.get(environment.author_all_list).subscribe((res:any) => {
+    this._http.get(environment.news_list).subscribe((res:any) => {
       this.toastr.success(res.message)
       this.data = res.data.result;
     })

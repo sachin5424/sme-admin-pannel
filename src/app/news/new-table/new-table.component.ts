@@ -19,7 +19,7 @@ export class NewTableComponent implements OnInit {
 
   spinner = {}
   @Input() data1:any;  
-  displayedColumns: any = ['multidelete','position','profile', 'name', 'weight', 'symbol','edit','delete'];
+  displayedColumns: any = ['multidelete','position','slug','profile', 'name', 'weight', 'symbol','edit','delete'];
   dataSource!:MatTableDataSource<any>
    
   @ViewChild('paginators') paginator!: MatPaginator;
@@ -43,13 +43,20 @@ export class NewTableComponent implements OnInit {
   openDialog(item:any) {
     console.log({item});
     
-    const dialogRef = this.dialog.open(NewAddEditComponent,{  width:"450px",data:{status:"Update",data:item}});
+    const dialogRef = this.dialog.open(NewAddEditComponent,{  width:"650px",data:{status:"Update",data:item}});
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`,result);
-    //  var objIndex = this.dataSource.findIndex((obj => obj._id == result._id));
-    //   this.dataSource[objIndex].name = result.name
-    //   this.dataSource[objIndex].email = result.email
-    //   this.dataSource[objIndex].status = result.status
+     var objIndex = this.dataSource.filteredData.findIndex((obj => obj._id == result._id));
+      this.dataSource.filteredData[objIndex].title = result.title
+      this.dataSource.filteredData[objIndex].slug = result.slug
+      this.dataSource.filteredData[objIndex].status = result.status
+      this.dataSource.filteredData[objIndex].image = result.image
+      this.dataSource.filteredData[objIndex].thumbNail = result.thumbNail
+      this.dataSource.filteredData[objIndex].date = result.date
+      this.dataSource.filteredData[objIndex].categoryId = result.categoryId
+      this.dataSource.filteredData[objIndex].favoriteSeason = result.favoriteSeason
+      this.dataSource.filteredData[objIndex].authorId = result.authorId
+      // this.dataSource.filteredData[objIndex].categoryId = result.categoryId
       
     });
   }
@@ -65,14 +72,18 @@ export class NewTableComponent implements OnInit {
       cancelButtonText: 'No, keep it'  
     }).then((result) => {  
       if (result.value) {  
-         this._http.delete(environment.author_delete+'/'+id).subscribe((res:any)=>{
+         this._http.delete(environment.news_delete+'/'+id).subscribe((res:any)=>{
       
       this.toastr.success(res.message);
-      // this.dataSource = this.dataSource.filter((value:any)=>{
-      //   return value._id != id;
-      // },(err:any)=>{
-      //   this.toastr.error(err.statusText)
-      // });
+      var deleteOne = this.dataSource.filteredData.filter((value:any)=>{
+        return value._id != id;
+
+      },(err:any)=>{
+        this.toastr.error(err.statusText)
+      });
+      this.dataSource = new MatTableDataSource(deleteOne);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     })
       } else if (result.dismiss === Swal.DismissReason.cancel) {  
         this.spinner[id] = false;

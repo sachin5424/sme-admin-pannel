@@ -12,12 +12,14 @@ import { environment } from 'src/environments/environment';
 })
 export class NewAddEditComponent implements OnInit {
 //   favoriteSeason = new FormControl('');
-  types=['inTheNews', 'recentNews', 'topStory', 'interview', 'focus', 'marketing', 'technology', 'money', 'editorial', 'theLastWord', 'feature']
+//   types=['inTheNews', 'recentNews', ]
+  types=[{title:'In The News',value:"inTheNews"}, {title:'Recent News',value:"recentNews"}, ]
   htmlData:any="";
   autherList:any = [];
   categoryList:any [] =[]
   spinner = false;
-  base64Image
+  base64Image:any 
+  thumbNailbase64Image:any
   Form:any
   errorObj:any ={
   
@@ -42,18 +44,23 @@ export class NewAddEditComponent implements OnInit {
    addForm(){
     
        var update = this.data.data;
+       if(update){
+          this.thumbNailbase64Image = update.thumbNail;
+          this.base64Image = update.image
+          this.htmlData = update.content
+       }
        console.log({update});
        
        this.Form = new FormGroup({
            status: new FormControl(update.status?update.status:false),
-           title: new FormControl(update.name?update.name:'',[Validators.required, Validators.minLength(2)]),
+           title: new FormControl(update.title?update.title:'',[Validators.required, Validators.minLength(2)]),
            slug : new FormControl(update.slug?update.slug:'',[Validators.required,]),
-           date:new FormControl(update.deate?update.date:'',[Validators.required,]),
-           type: new FormControl('',[]),
-           categoryId: new FormControl('',[]),
-           favoriteSeason:new FormControl(''),
-           authorId:new FormControl('',[Validators.required]),
-           image:new FormControl('',[])
+           date:new FormControl(update.date?update.date:'',[Validators.required,]),
+           type: new FormControl(update.type?update.type:'',[]),
+           categoryId: new FormControl(update.categoryId?update.categoryId:'',[]),
+           favoriteSeason:new FormControl(update.favoriteSeason?update.favoriteSeason:''),
+           authorId:new FormControl(update.authorId?update.authorId:'',[Validators.required]),
+           image:new FormControl(update.image?update.image:'',[])
        })
    }
    submit(formDirective:any){
@@ -68,9 +75,14 @@ export class NewAddEditComponent implements OnInit {
        this.spinner = true;
        if(this.Form.valid){
         this.Form.value['content'] = this.htmlData;
-        this.Form.value['image'] =this.base64Image
+        this.Form.value['image'] =this.base64Image;
+        this.Form.value['thumbNail'] =this.thumbNailbase64Image;
+        //thumbNailbase64Image
            if(this.data.status =="Update"){
                this.Form.addControl('_id',new FormControl(this.data.data._id))
+               this.Form.value['content'] = this.htmlData;
+               this.Form.value['image'] =this.base64Image;
+               this.Form.value['thumbNail'] =this.thumbNailbase64Image;
            }
         this._http.post(environment.news_save,this.Form.value).subscribe((res:any)=>{
            console.log(res);
@@ -178,4 +190,64 @@ onFileSelected(fileInput:any){
     }
 
 }
+
+onFileSelectedthumbNailbase64Image(fileInput:any){
+    this.imageError = null;
+    // console.log(fileInput.target.files.FileList);
+    
+    if (fileInput.target.files && fileInput.target.files[0]) {
+        // Size Filter Bytes
+        const max_size = 20971520;
+        const allowed_types = ['image/png', 'image/jpeg'];
+        const max_height = 15200;
+        const max_width = 25600;
+
+        if (fileInput.target.files[0].size > max_size) {
+            this.imageError =
+                'Maximum size allowed is ' + max_size / 1000 + 'Mb';
+
+            return false;
+        }
+
+    
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            const image = new Image();
+            console.log(image);
+            
+            image.src = e.target.result;
+            image.onload = rs => {
+                const img_height = rs.currentTarget['height'];
+                const img_width = rs.currentTarget['width'];
+
+                console.log(img_height, img_width);
+
+
+                if (img_height > max_height && img_width > max_width) {
+                    this.imageError =
+                        'Maximum dimentions allowed ' +
+                        max_height +
+                        '*' +
+                        max_width +
+                        'px';
+                    return false;
+                } else {
+                    const imgBase64Path = e.target.result;
+                    this.thumbNailbase64Image = imgBase64Path
+                    console.log(imgBase64Path);
+                    
+                    this.cardImageBase64 = imgBase64Path;
+                    
+                    this.isImageSaved = true;
+                    // this.previewImagePath = imgBase64Path;
+                }
+            };
+        };
+
+  
+        reader.readAsDataURL(fileInput.target.files[0]);
+    }
+
+}
+
 }
