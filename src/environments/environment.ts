@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 
-const baseUrl = "http://192.168.1.26:3000/admin/"
+const baseUrl = "http://13.126.211.152:3000/admin/"
 export const environment = {
-  api_url:"http://192.168.1.26:3000/",
+  api_url:"http://13.126.211.152:3000/admin",
   production: false,
   category_all_list:baseUrl+"category/list/ALL",
   category_save:baseUrl+"category/save",
