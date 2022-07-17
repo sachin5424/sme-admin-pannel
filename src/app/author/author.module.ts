@@ -9,7 +9,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { angularUIModule } from '../shared/material-ui.module';
 import { TextAuthInterceptor } from '../_http/HttpInterceptor';
 import { AddEditAuthorComponent } from './add-edit-sub-author/add-edit-author.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
+import { JwPaginationModule } from 'jw-angular-pagination';
 
 @NgModule({
   declarations: [ AuthorTableComponent, AuthorDashboardComponent, AddEditAuthorComponent],
@@ -19,9 +20,12 @@ import { AddEditAuthorComponent } from './add-edit-sub-author/add-edit-author.co
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    angularUIModule
+    angularUIModule,
+    NgxPaginationModule,
+    JwPaginationModule
   ],
   providers: [
+    NgxPaginationModule,
     { provide: HTTP_INTERCEPTORS, useClass: TextAuthInterceptor, multi: true }
   ]
 })

@@ -1,6 +1,13 @@
 
 <div >
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <mat-form-field appearance="standard">
+    <mat-label>Category</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Category .." #input>
+  </mat-form-field>
+<table mat-table [dataSource]="dataSource | paginate:{ 
+  itemsPerPage: 10,
+  currentPage: page,
+  totalItems: 100 }" class="mat-elevation-z8">
 
 
   <!-- <ng-container matColumnDef="select">
@@ -43,7 +50,12 @@
       <th mat-header-cell *matHeaderCellDef> Title </th>
       <td mat-cell *matCellDef="let element"> {{element.title}} </td>
     </ng-container>
-  
+
+    <ng-container matColumnDef="forFront">
+      <th mat-header-cell *matHeaderCellDef> Home Page Category </th>
+      <td mat-cell *matCellDef="let element"> {{element?.forFront == true?true:false}} </td>
+    </ng-container>
+    <!-- forFront -->
     <ng-container matColumnDef="weight">
       <th mat-header-cell *matHeaderCellDef> Slug </th>
       <td mat-cell *matCellDef="let element"> {{element.slug}} </td>
@@ -78,10 +90,17 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     
   </table>
-  <mat-paginator  #paginators  [pageSizeOptions]="[5, 10, 20]"
-  showFirstLastButtons 
-  aria-label="Select page of periodic elements">
-</mat-paginator> 
+
+  <mat-paginator
+  (page)="onTableDataChange($event)"
+  [length]="length"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+  aria-label="Select page">
+</mat-paginator>
+
 
 </div>
 

@@ -7,8 +7,9 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditAuthorComponent } from '../add-edit-sub-author/add-edit-author.component';
 import { MatTableDataSource } from '@angular/material/table';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-author-table',
@@ -18,26 +19,41 @@ import { MatSort } from '@angular/material/sort';
 export class AuthorTableComponent implements OnInit {
   spinner = {}
   multiDelete = []
-  @Input() data1:any;  
+  data1:any;  
+  pageEvent: PageEvent;
+  length:number;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
+  tempArray:any = []
+
+  totalData:any
   displayedColumns: any = ['multidelete','position','profile', 'name', 'weight', 'symbol','edit','delete'];
   dataSource!:MatTableDataSource<any>
    
   @ViewChild('paginators') paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog) {
-
+  config: { itemsPerPage: number; currentPage: number; totalItems: any; };
+  items: { id: number; name: string; }[];
+  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog,private spinnerNGX: NgxSpinnerService) {
+    this.config = {
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: length
+    };
    }
 
   ngOnInit(): void {
-
- 
+this.get_category_list(this.pageIndex,this.pageSize)
+this.items = Array(15).fill(0).map((x, i) => ({ id: (i + 1), name: `Item ${i + 1}`}));
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.dataSource = new MatTableDataSource(this.data1);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.dataSource = new MatTableDataSource(this.data1);
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
    
-	}
+	// }
 
   openDialog(item:any) {
     const dialogRef = this.dialog.open(AddEditAuthorComponent,{  width:"450px",data:{status:"Update",data:item}});
@@ -89,6 +105,7 @@ export class AuthorTableComponent implements OnInit {
       cancelButtonText: 'No, keep it'  
     }).then((result) => {  
       if (result.value) {  
+        
          this._http.post(environment.author_multi_delete,this.multiDelete).subscribe((res:any)=>{
           // this.spinner[id] = false;
       this.toastr.success(res.message);
@@ -118,5 +135,24 @@ export class AuthorTableComponent implements OnInit {
       this.multiDelete.splice(index, 1);
     }
   }
- 
+  get_category_list(page?:any,limit?:any){
+    this.spinnerNGX.show()
+    this._http.get(environment.author_all_list+`?page=${page||1}&limit=${limit||90}`).subscribe((res:any) => {
+
+      this.spinnerNGX.hide()
+      this.length = res.data.total;
+      this.dataSource = new MatTableDataSource(res.data.result);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    
+    },(err:any)=>{
+      this.spinnerNGX.hide()
+    })
+  }
+  onTableDataChange(event: any):any {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex+1;
+    this.get_category_list(this.pageIndex,this.pageSize)
+  }
 }

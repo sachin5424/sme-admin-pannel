@@ -27,7 +27,7 @@ export class CommentDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.get_category_list()
+    // this.get_category_list()
   }
   get_category_list(){
     this._http.get(environment.comment_list).subscribe((res:any) => {

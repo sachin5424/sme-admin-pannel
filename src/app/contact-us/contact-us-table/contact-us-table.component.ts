@@ -9,6 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -31,8 +32,12 @@ export class ContactUsTableComponent implements OnInit {
   
   @ViewChild('paginators') paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog) {
+  length: any;
+  pageSize: any = 5
+  pageIndex: any =1
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
+  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog,private spinnerNGX: NgxSpinnerService) {
   
    }
 
@@ -40,22 +45,42 @@ export class ContactUsTableComponent implements OnInit {
  
   ngOnInit(): void {
 
- 
+    this.get_category_list(this.pageIndex,this.pageSize)
   }
+
+  onTableDataChange(event: any):any {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex+1;
+    this.get_category_list(this.pageIndex,this.pageSize)
+  }
+  get_category_list(page?:any,limit?:any){
+    this.spinnerNGX.show()
+    this._http.get(environment.contactUs+`?page=${page}&limit=${limit}`).subscribe((res:any) => {
+      this.length = res.data.total;
+      this.spinnerNGX.hide()
+      this.dataSource = new MatTableDataSource(res.data.result);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    },(err:any)=>{
+      this.spinnerNGX.hide()
+    })
+  }
+
   // ngAfterViewInit() {
   //   this.dataSource.paginator = this.paginator;
   // }
 
-  ngOnChanges(changes: SimpleChanges) {
+  // ngOnChanges(changes: SimpleChanges) {
  
-    this.dataSource = new MatTableDataSource(this.data1);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    console.log(this.dataSource,"?>?>?");
+  //   this.dataSource = new MatTableDataSource(this.data1);
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  //   console.log(this.dataSource,"?>?>?");
     
-    // this.dataSource =  new MatTableDataSource<any>(this.data1);
+  //   // this.dataSource =  new MatTableDataSource<any>(this.data1);
    
-	}
+	// }
 
   openDialog(item:any) {
     const dialogRef = this.dialog.open(ContactUsAddEditComponent,{  width:"450px",data:{status:"Update",data:item}});

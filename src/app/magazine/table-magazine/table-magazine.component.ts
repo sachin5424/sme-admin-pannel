@@ -9,6 +9,7 @@ import {AddEditMagazineComponent} from '../add-edit-magazine/add-edit-magazine.c
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -26,14 +27,18 @@ export class TableMagazineComponent implements OnInit {
   @ViewChild('paginators') paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   multiDelete:any =[]
-
-  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog) {
+  length: any;
+  pageSize: any = 5
+  pageIndex: any =1
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
+  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog,private spinnerNGX: NgxSpinnerService) {
 
    }
 
   ngOnInit(): void {
 
- 
+    this.get_category_list(this.pageIndex,this.pageSize)
   }
   MultideleletCategory(){
     // this.spinner[id] = true;
@@ -76,12 +81,32 @@ export class TableMagazineComponent implements OnInit {
       this.multiDelete.splice(index, 1);
     }
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.dataSource = new MatTableDataSource(this.data1);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.dataSource = new MatTableDataSource(this.data1);
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
    
-	}
+	// }
+
+
+  onTableDataChange(event: any):any {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex+1;
+    this.get_category_list(this.pageIndex,this.pageSize)
+  }
+  get_category_list(page?:any,limit?:any){
+    this.spinnerNGX.show()
+    this._http.get(environment.magazine+`?page=${page}&limit=${limit}`).subscribe((res:any) => {
+      this.length = res.data.total;
+      this.spinnerNGX.hide()
+      this.dataSource = new MatTableDataSource(res.data.result);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    },(err:any)=>{
+      this.spinnerNGX.hide()
+    })
+  }
 
   openDialog(item:any) {
     const dialogRef = this.dialog.open(AddEditMagazineComponent,{  width:"450px",data:{status:"Update",data:item}});

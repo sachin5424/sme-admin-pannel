@@ -9,6 +9,7 @@ import {AdsAddEditComponent} from '../ads-add-edit/ads-add-edit.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -17,7 +18,11 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./ads-table.component.scss']
 })
 export class AdsTableComponent implements OnInit {
-
+  length: any;
+  pageSize: any = 5
+  pageIndex: any =1
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
   spinner = {}
   @Input() data1:any;  
   displayedColumns: any = ['multidelete','position','profile', 'name', 'weight','openin', 'symbol','edit','delete'];
@@ -27,12 +32,12 @@ export class AdsTableComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   multiDelete:any =[]
 
-  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog) {
+  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog,private spinnerNGX: NgxSpinnerService) {
 
    }
 
   ngOnInit(): void {
-
+    this.get_category_list(this.pageIndex,this.pageSize)
  
   }
   MultideleletCategory(){
@@ -75,12 +80,25 @@ export class AdsTableComponent implements OnInit {
       this.multiDelete.splice(index, 1);
     }
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.dataSource = new MatTableDataSource(this.data1);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-   
-	}
+
+  onTableDataChange(event: any):any {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex+1;
+    this.get_category_list(this.pageIndex,this.pageSize)
+  }
+  get_category_list(page?:any,limit?:any){
+    this.spinnerNGX.show()
+    this._http.get(environment.ads_all_list+`?page=${page}&limit=${limit}`).subscribe((res:any) => {
+      this.length = res.data.total;
+      this.spinnerNGX.hide()
+      this.dataSource = new MatTableDataSource(res.data.result);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    },(err:any)=>{
+      this.spinnerNGX.hide()
+    })
+  }
 
   openDialog(item:any) {
     const dialogRef = this.dialog.open(AdsAddEditComponent,{  width:"450px",data:{status:"Update",data:item}});

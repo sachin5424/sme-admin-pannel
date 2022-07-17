@@ -9,6 +9,7 @@ import {  NewAddEditComponent} from '../new-add-edit/new-add-edit.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-new-table',
@@ -24,21 +25,48 @@ export class NewTableComponent implements OnInit {
    
   @ViewChild('paginators') paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  length:any;
+  pageSize = 5;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
+  quary :any
   multiDelete:any =[]
-  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog) {
-
+  constructor(private _http:HttpClient,private toastr: ToastrService,public dialog: MatDialog,private spinnerNGX: NgxSpinnerService) {
+    
    }
 
   ngOnInit(): void {
-
+    this.get_category_list(this.pageIndex,this.pageSize)
  
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.dataSource = new MatTableDataSource(this.data1);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
+  onTableDataChange(event: any):any {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex+1;
+    this.get_category_list(this.pageIndex,this.pageSize)
+  }
+
+  get_category_list(page?:any,limit?:any){
+    this.spinnerNGX.show();
+    this._http.get(environment.news_list+`?page=${page}&limit=${limit}`).subscribe((res:any) => {
+      // this.toastr.success(res.message)
+      this.spinnerNGX.hide();
+      this.length = res.data.total
+      this.dataSource = new MatTableDataSource(res.data.result);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    },(err:any)=>{
+      this.spinnerNGX.hide();
+    })
+  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   this.dataSource = new MatTableDataSource(this.data1);
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
    
-	}
+	// }
 
   openDialog(item:any) {
     console.log({item});

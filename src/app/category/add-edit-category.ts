@@ -43,9 +43,11 @@ import { environment } from 'src/environments/environment';
                 </mat-form-field>
             </div>
             <div class="col-md-12 mt-2">
+            <mat-checkbox formControlName="forFront">Home Page Category</mat-checkbox>       
+            </div>
+            <div class="col-md-12 mt-2">
             <mat-checkbox formControlName="status">Status</mat-checkbox>       
             </div>
-           
             <div class="col-md-12 mt-2">
              <button type="submit" mat-raised-button color="spinner==true?null:primary'"   >
              <mat-spinner style="margin-left: 0px; margin:5px" diameter="25"   *ngIf="spinner" ></mat-spinner>
@@ -81,6 +83,8 @@ export class addEditCategoryComponent implements OnInit {
         var update = this.data.data;
         this.Form = new FormGroup({
             status: new FormControl(update.status?update.status:false),
+            forFront: new FormControl(update.forFront?update.forFront:false),
+            //forFront
             title: new FormControl(update.title?update.title:'',[Validators.required, Validators.minLength(2)]),
             slug : new FormControl(update.title?update.title:'',[Validators.required, Validators.minLength(2)]),
         })

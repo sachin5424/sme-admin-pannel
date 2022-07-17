@@ -4,14 +4,18 @@
             <div class="card text-left">
               <div class="card-body">
                 <h1>category-dashboard</h1>
-                <button mat-raised-button (click)="openDialog()" >Add category</button>
+                <button mat-raised-button  (click)="openDialog()" >Add category</button>
               </div>
             </div>
+
+            
           
          </div>
         <div class="col-md-12">
-          <!-- {{ data }} -->
-            <app-table-category [(data1)]="data"></app-table-category>
+        
+  
+            <app-table-category [(data1)]="data"  [page]="page"></app-table-category>
+           
          </div>
     </div>
 </div>

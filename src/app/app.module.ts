@@ -12,6 +12,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TextAuthInterceptor } from './_http/HttpInterceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { LoginComponent } from './login/login.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSpinnerModule } from "ngx-spinner";
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,9 @@ import { LoginComponent } from './login/login.component';
     ApppRoutingModule,
     angularUIModule,
     ReactiveFormsModule,
+    NgxSpinnerModule,
     ToastrModule.forRoot(),
+    NgxPaginationModule
   
   ],
   providers: [

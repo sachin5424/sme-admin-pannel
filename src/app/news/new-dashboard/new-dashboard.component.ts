@@ -27,7 +27,7 @@ export class NewDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.get_category_list()
+    // this.get_category_list()
   }
   get_category_list(){
     this._http.get(environment.news_list).subscribe((res:any) => {

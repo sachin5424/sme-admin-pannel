@@ -6,12 +6,11 @@ import { TableCategoryComponent } from './table-category/table-category.componen
 import { CategoryDashboardComponent } from './category-dashboard/category-dashboard.component';
 import { angularUIModule } from '../shared/material-ui.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { CategoryService } from '../_http/api/services/category-service';
+import { CategoryService } from './category-service';
 import { TextAuthInterceptor } from '../_http/HttpInterceptor';
 import { addEditCategoryComponent } from './add-edit-category';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import { NgxPaginationModule } from 'ngx-pagination';
 @NgModule({
   declarations: [TableCategoryComponent, CategoryDashboardComponent,addEditCategoryComponent],
   imports: [
@@ -20,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     HttpClientModule,
     angularUIModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [CategoryService,    { provide: HTTP_INTERCEPTORS, useClass: TextAuthInterceptor, multi: true }]
 })

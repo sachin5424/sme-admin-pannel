@@ -66,11 +66,15 @@
   </table>
   
    
-  <mat-paginator  #paginators  [pageSizeOptions]="[1,5, 10, 20]"
-  showFirstLastButtons 
-  aria-label="Select page of periodic elements">
-</mat-paginator> 
-
+  <mat-paginator
+  (page)="onTableDataChange($event)"
+  [length]="length"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+  aria-label="Select page">
+</mat-paginator>
 
 
 
